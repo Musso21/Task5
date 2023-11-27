@@ -1,0 +1,129 @@
+body {
+    font-family: 'Arial', sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    background-color: #343a40;
+    box-shadow: 0 2px 4px rgba(255, 0, 0, 0.507);
+}
+
+.navbar-brand, .nav-link {
+    color: #f8f9fa !important;
+}
+
+.navbar-nav .nav-link {
+    margin-right: 1rem;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-brand:hover {
+    color: #BF0A30;
+    text-decoration: none;
+}
+
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    box-shadow: 0 9px 18spx rgba(0, 0, 0, 0.507).1);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        margin: 1rem auto;
+    }
+}
+
+.main-background {
+    background: url('../Image/design1_image1.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+    position: relative;
+}
+
+.text-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    text-align: center;
+    z-index: 2;
+}
+
+.auth-form-container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    margin-bottom: .5rem;
+    display: block;
+    color: #495057;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+.btn {
+    width: 100%;
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    border: 1px solid #ced4da;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25);
+}
+
+.btn {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.error-message {
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.switch-auth {
+    text-align: center;
+    display: block;
+    margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+    .auth-form-container, .text-container {
+        padding: 1rem;
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+    }
+}
