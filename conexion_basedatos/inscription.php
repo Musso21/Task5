@@ -8,35 +8,59 @@ $username = "root";
 $password = "";
 $dbname = "user";
 
+// Crear conexión
 $connection = new mysqli($servername, $username, $password, $dbname);
 
+// Chequear conexión
 if ($connection->connect_error) {
-    die("Connection failed: " . $connection->connect_error);
+    echo json_encode(['status' => 'error', 'message' => "Connection failed: " . $connection->connect_error]);
+    exit;
 }
 
+$response = ['status' => 'error', 'message' => ''];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = $_POST['user_id'];
-    $firstName = $_POST['firstName'];
-    $lastName = $_POST['lastName'];
-    $address = $_POST['address'];
-    $city = $_POST['city'];
-    $zip = $_POST['zip'];
-    $birthdate = $_POST['birthdate'];
-    $gender = $_POST['gender'];
-    $grade = $_POST['grade'];
-    $school = $_POST['school'];
-    $position = isset($_POST['position']) ? implode(", ", $_POST['position']) : ''; // Assuming position is an array of checked values
-    $uniformSize = $_POST['uniformSize'];
-    $agreement = isset($_POST['agreement']) ? 1 : 0; // Assuming agreement is a checkbox
+    // Recoger las variables del formulario
+    $user_id = $_POST['user_id'] ?? null; // Aquí debes asegurarte de que este campo se está enviando correctamente desde el cliente
+    $firstName = $_POST['firstName'] ?? '';
+    $lastName = $_POST['lastName'] ?? '';
+    $address = $_POST['address'] ?? '';
+    $city = $_POST['city'] ?? '';
+    $zip = $_POST['zip'] ?? '';
+    $birthdate = $_POST['birthdate'] ?? '';
+    $gender = $_POST['gender'] ?? '';
+    $grade = $_POST['grade'] ?? '';
+    $school = $_POST['school'] ?? '';
+    $positions = isset($_POST['position']) ? $_POST['position'] : []; // position es un array de valores
+    $position = implode(', ', $positions); // Convertir el array a string separado por comas
+    $uniformSize = $_POST['uniformSize'] ?? '';
+    $agreement = isset($_POST['agreement']) ? 1 : 0;
 
-    $sql = "INSERT INTO inscriptions (user_id, first_name, last_name, address, city, zip, birthdate, gender, grade, school, position, uniform_size, agreement) VALUES ('$user_id', '$firstName', '$lastName', '$address', '$city', '$zip', '$birthdate', '$gender', '$grade', '$school', '$position', '$uniformSize', '$agreement')";
-
-    if ($connection->query($sql) === TRUE) {
-        echo "New record created successfully";
+    // Preparar la consulta SQL
+    $sql = "INSERT INTO inscriptions (user_id, first_name, last_name, address, city, zip, birthdate, gender, grade, school, position, uniform_size, agreement) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $connection->prepare($sql);
+    
+    if ($stmt) {
+        // Vincular parámetros a la consulta preparada
+        $stmt->bind_param("isssssssssssi", $user_id, $firstName, $lastName, $address, $city, $zip, $birthdate, $gender, $grade, $school, $position, $uniformSize, $agreement);
+        
+        // Ejecutar la consulta preparada
+        if ($stmt->execute()) {
+            $response['status'] = 'success';
+            $response['message'] = 'Inscripción realizada con éxito.';
+        } else {
+            $response['message'] = 'Error al realizar la inscripción: ' . $stmt->error;
+        }
+        
+        $stmt->close();
     } else {
-        echo "Error: " . $sql . "<br>" . $connection->error;
+        $response['message'] = 'Error al preparar la consulta: ' . $connection->error;
     }
+} else {
+    $response['message'] = 'Método no soportado.';
 }
 
 $connection->close();
+echo json_encode($response);
 ?>

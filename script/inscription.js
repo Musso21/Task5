@@ -1,30 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
     const registrationForm = document.getElementById('registrationForm');
     
-    if (registrationForm) {
-        registrationForm.onsubmit = function (event) {
-            event.preventDefault();
-            const formData = new FormData(registrationForm);
-            formData.append('user_id', localStorage.getItem('user_id')); // Asegúrate de que 'user_id' se guarde en localStorage cuando el usuario inicie sesión.
+    registrationForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        
+        const formData = new FormData(this);
+        formData.append('user_id', localStorage.getItem('user_id')); // Asegúrate de que 'user_id' se guarde en localStorage cuando el usuario inicie sesión.
 
-            fetch('http://localhost/Task5/conexion_basedatos/inscription.php', { // Asegúrate de que 'inscription.php' es la ruta correcta al archivo PHP en tu servidor.
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    console.log('Inscripción realizada con éxito.');
-                    // Redirigir al usuario o mostrar mensaje de éxito
-                } else {
-                    console.error('Error en la inscripción:', data.message);
-                    // Mostrar mensaje de error
-                }
-            })
-            .catch(error => {
-                console.error('Error en la red o del servidor:', error);
-                // Mostrar mensaje de error de conexión
-            });
-        };
-    }
+        fetch('conexion_basedatos/inscription.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Inscripción realizada con éxito.');
+                // Redirigir o actualizar la interfaz de usuario
+            } else {
+                alert('Error en la inscripción: ' + data.message);
+                // Manejar el error
+            }
+        })
+        .catch(error => {
+            alert('Error en la red o del servidor: ' + error);
+            // Manejar el error de red
+        });
+    });
 });
