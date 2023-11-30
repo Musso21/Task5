@@ -1,11 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
     const registrationForm = document.getElementById('registrationForm');
-    
+
     registrationForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        
-        const formData = new FormData(this);
-        formData.append('user_id', localStorage.getItem('user_id')); // Asegúrate de que 'user_id' se guarde en localStorage cuando el usuario inicie sesión.
+
+        const formData = new FormData(registrationForm);
+        const userId = localStorage.getItem('user_id');
+        if (userId) {
+            formData.append('user_id', userId);
+        } else {
+            alert('No user session started.');
+            return;
+        }
 
         fetch('conexion_basedatos/inscription.php', {
             method: 'POST',
@@ -14,16 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                alert('Inscripción realizada con éxito.');
-                // Redirigir o actualizar la interfaz de usuario
+                alert('Registration recorded successfully.');
+                location.reload(); // Recarga la página después de mostrar la alerta
             } else {
-                alert('Error en la inscripción: ' + data.message);
-                // Manejar el error
+                console.error('Registration error:', data.message);
+                alert('Registration error: ' + data.message); // Muestra un mensaje de error si algo va mal
             }
         })
         .catch(error => {
-            alert('Error en la red o del servidor: ' + error);
-            // Manejar el error de red
+            console.error('Network or server error:', error);
+            alert('Network or server error: ' + error); // Muestra un mensaje de error de red
         });
     });
 });

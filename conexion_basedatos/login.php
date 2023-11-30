@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
-        echo json_encode(['status' => 'success']);
+        // Envía el ID del usuario como parte de la respuesta JSON.
+        echo json_encode(['status' => 'success', 'user_id' => $user['id']]);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'El correo electrónico o la contraseña no son correctos.']);
     }

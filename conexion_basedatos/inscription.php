@@ -16,12 +16,23 @@ if ($connection->connect_error) {
     echo json_encode(['status' => 'error', 'message' => "Connection failed: " . $connection->connect_error]);
     exit;
 }
-
+$user_id = $_POST['user_id'] ?? null;
+// Valida que el user_id existe
+if ($user_id) {
+    $userExists = $connection->query("SELECT id FROM user WHERE id = $user_id")->num_rows > 0;
+    if (!$userExists) {
+        echo json_encode(['status' => 'error', 'message' => 'El usuario no existe.']);
+        exit;
+    }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'No se proporcionó user_id.']);
+    exit;
+}
 $response = ['status' => 'error', 'message' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Recoger las variables del formulario
-    $user_id = $_POST['user_id'] ?? null; // Aquí debes asegurarte de que este campo se está enviando correctamente desde el cliente
+    $user_id = $_POST['user_id'] ?? null; // Obtén el user_id del array POST.
     $firstName = $_POST['firstName'] ?? '';
     $lastName = $_POST['lastName'] ?? '';
     $address = $_POST['address'] ?? '';

@@ -23,8 +23,8 @@ document.getElementById('loginForm').onsubmit = function(event) {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            localStorage.setItem('isLoggedIn', 'true');
-            localStorage.setItem('firstTimeLogin', 'true'); // Establece la bandera para la primera vez
+            localStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('user_id', data.user_id);
             window.location.href = 'inscription_form.html'; // Redirige al formulario de inscripción
         } else {
             var loginErrorMessage = document.getElementById('loginErrorMessage');
